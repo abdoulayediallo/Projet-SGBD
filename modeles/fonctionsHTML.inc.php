@@ -654,24 +654,32 @@ function crud_typematchs($tab){
 	                 ';
         $teamToSelect = select_team_for_calendar();
         $resultat .= 'TEAM   ';
-        $selectMenu = '<select name="teamSelectedForCalendar">';
+        $selectMenuTeam = '<select name="teamSelectedForCalendar">';
         for($i = 0; $i<count($teamToSelect); $i++) {
-            $selectMenu .=	 '<option>'.$teamToSelect[$i].'</option>';
+            $selectMenuTeam .=	 '<option>'.$teamToSelect[$i].'</option>';
         }
-        $selectMenu .= '</select>';
-        $resultat .= '<p>'.$selectMenu.'</p><br>';
+        $selectMenuTeam .= '</select>';
+        $resultat .= $selectMenuTeam.'<br><br>';
         $resultat .= 'YEAR TEAM   <br><input type="text" name="newYearTeamInTeamsCalendarUpdate" ><br>';
         $resultat .= 'IN TEAM     <br><input type="text" name="newIndTeamInTeamsCalendarUpdate" ><br>';
         $resultat .= 'OUT TEAM    <br><input type="text" name="newOutTeamInTeamsCalendarUpdate" ><br>';
         $resultat .= 'SCORE IN    <br><input type="text" name="newScoreINInTeamsCalendarUpdate" ><br>';
-        $resultat .= 'SCORE OUT   <br><input type="text" name="newScoreOUTInTeamsCalendarUpdate" ><br>';
-        $resultat .= 'TYPE MATCH  <br><input type="text" name="newTypeMatchInTeamsCalendarUpdate" ><br>';
+        $resultat .= 'SCORE OUT   <br><input type="text" name="newScoreOUTInTeamsCalendarUpdate" ><br><br>';
+        $resultat .= 'TYPE MATCH ';
+        $typeMatchSelected = select_typeMatch_for_calendar();
+        $selectMenuTypeMatch = '<select name="newTypeMatchInTeamsCalendarUpdate">';
+        for($i = 0; $i<count($typeMatchSelected); $i++) {
+            $selectMenuTypeMatch .=	 '<option>'.$typeMatchSelected[$i].'</option>';
+        }
+        $selectMenuTypeMatch .= '</select>';
+        $resultat .= $selectMenuTypeMatch.'<br><br>';
         $resultat .= 'MODIFIED    <br><input type="text" name="newmodifiedInTeamsCalendarUpdate" ><br>';
         $resultat .= '#MATCH      <br><input type="text" name="newnumMatchInTeamsCalendarUpdate" ><br>';
         $resultat .= 'TIME MATCH  <br><input type="text" name="newTimeMatchInTeamsCalendarUpdate" ><br>';
         $resultat .= 'DATE MATCH  <br><input type="text" name="newDateMatchInTeamsCalendarUpdate" ><br>';
         $resultat .= '<input type="submit" name="addNewCalendar" value="ADD"><br>';
         $resultat .= '</fieldset>';
+        $resultat .= '<p></p>';
         $resultat .=	'<table id="tableBalises" >
 						<thead>
 							<tr>
