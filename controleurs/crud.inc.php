@@ -50,10 +50,32 @@ if(isset($_POST['choixTables'])){
 			$table_name = '::::::::::::::::::::::::::::::::: Teams CALENDAR :::::::::::::::::::::::::::::::::';
 		break;
 		
+		case "teamsdelegues":
+			$crud = afficher_delegue_par_team(afficher_delegues_par_teams()) ;
+			$table_name = '::::::::::::::::::::::::::::::::: Teams DELEGUES :::::::::::::::::::::::::::::::::';
+		break;
+		
+		case "teamsranking":
+			$crud = afficher_TeamsRanking(afficher_classement_teamsRanking()) ;
+			$table_name = '::::::::::::::::::::::::::::::::: Teams RANKING :::::::::::::::::::::::::::::::::';
+		break;
+		
+		case "teamstraining":
+			$crud = afficher_TeamsTraining(afficher_training()) ;
+			$table_name = '::::::::::::::::::::::::::::::::: Teams TRAINING :::::::::::::::::::::::::::::::::';
+		break;
+		
+		case "teamsgames":
+			$crud = afficher_TeamsGames(afficher_games()) ;
+			$table_name = '::::::::::::::::::::::::::::::::: Teams GAMES :::::::::::::::::::::::::::::::::';
+		break;
+		
 		default:
 			echo "Cette table ne doit pas etre cruder :) ... du moins pas pour l'instant'";
 	}
 }
+
+
 if(isset($_POST['ajouterLabelDaysOfWeek']) or isset($_POST['modifieridDayDaysOfWeek']) or isset($_POST['supprimerLabelDaysOfWeek'])){
 	crud_daysOfWeek();
 	$crud = crud_dayOfWeeks(daysOfWeek());
@@ -116,6 +138,77 @@ if(isset($_POST['updateCalendar']) ){
 	updateCalendar();
 	$crud = show_selected_team_calendar(selected_team_calendar());
 	$crud .= show_teams_calendar(show_teams_calendars());
+}
+
+if(isset($_POST['addNewCalendar']) ){
+    add_new_calendar();
+    $crud = show_teams_calendar(show_teams_calendars());
+}
+
+if(isset($_POST['modifierTeamDelegues'])){
+	$crud = show_selected_team_delegue(selected_team_delegueAModifier());
+	$crud .= afficher_delegue_par_team(afficher_delegues_par_teams()) ;
+	
+}
+
+if(isset($_POST['updateDelegue'])){
+	update_delegue();
+	$crud = show_selected_team_delegue(selected_team_delegueAModifier());
+	$crud .= afficher_delegue_par_team(afficher_delegues_par_teams()) ;
+}
+
+if(isset($_POST['addNewDelegue'])){
+	add_new_delegue();
+	$crud = show_selected_team_delegue(selected_team_delegueAModifier());
+	$crud .= afficher_delegue_par_team(afficher_delegues_par_teams()) ;
+}
+
+if(isset($_POST['updateRanking'])){
+	update_ranking();
+	$crud = afficher_selected_team(selected_classement_teamsRanking());
+	$crud .= afficher_TeamsRanking(afficher_classement_teamsRanking()) ;
+}
+	
+if(isset($_POST['modifierTeamsRanking'])){
+		$crud = afficher_selected_team(selected_classement_teamsRanking());
+		$crud .= afficher_TeamsRanking(afficher_classement_teamsRanking()) ;
+}
+
+if(isset($_POST['addRanking'])){
+	add_new_ranking();
+	$crud = afficher_TeamsRanking(afficher_classement_teamsRanking()) ;
+}
+
+if(isset($_POST['modifierTeamsTraining'])){
+		$crud = afficher_selected_teamTraining(selected_team_training());
+		$crud .= afficher_TeamsTraining(afficher_training()) ;
+}
+
+if(isset($_POST['updateTraining'])){
+		update_training();
+		$crud = afficher_selected_teamTraining(selected_team_training());
+		$crud .= afficher_TeamsTraining(afficher_training()) ;
+}
+
+if(isset($_POST['addTraining'])){
+		add_new_training();
+		$crud = afficher_TeamsTraining(afficher_training()) ;
+}
+
+if(isset($_POST['modifierTeamsGames'])){
+		$crud = afficher_selected_teamGames(selected_team_games());
+		$crud .= afficher_TeamsGames(afficher_games()) ;
+}
+
+if(isset($_POST['updateGames'])){
+		update_games();
+		$crud = afficher_selected_teamGames(selected_team_games());
+		$crud .= afficher_TeamsGames(afficher_games()) ;
+}
+
+if(isset($_POST['addGames'])){
+		add_new_games();
+		$crud = afficher_TeamsGames(afficher_games()) ;
 }
 require('vues/crud.inc.php');
 ?>

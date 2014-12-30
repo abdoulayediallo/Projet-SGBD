@@ -21,6 +21,9 @@ function headerr(){
 				<!DOCTYPE html>
 				<html>
 				<head>
+					<style type="text/css">
+						#madiv{height:250pt;overflow:auto}
+					</style> 
 					<link rel="stylesheet" href="css/moncss.css">
 					<link rel="stylesheet" href="css/model01.css">
 					<link rel="stylesheet" href="css/table.css">
@@ -53,8 +56,7 @@ function choix_tables($tab){
 */
 function select_idDay($tab){
 
-	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat .= '<select name="choixIdDay">';
+	$resultat = '<select name="choixIdDay">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idDay'].'</option>';
 	}
@@ -64,8 +66,8 @@ function select_idDay($tab){
 
 // fonction qui va afficher toutes les opérations à effectuer sur la table daysofweek
 function crud_dayOfWeeks($tab){
-	$resultat = '	<form id="formulaire" action="?action=crud" method ="POST">
-					<fieldset>
+	$resultat = '	
+					<fieldset class="block">
 						<legend>Ajouter</legend>
 							ID : '.increment_daysOfWeekID() .'<br>
 					Label: <input type="text" name="labelDaysOfWeekInput"><input type="submit" name="ajouterLabelDaysOfWeek" value="Ajouter"><br>
@@ -94,8 +96,7 @@ function crud_dayOfWeeks($tab){
 	$resultat .= '	
 					</tbody>
 					</thead>
-				   </table>
-				   </form>';			   
+				   </table>';			   
 	return $resultat;
 }
 
@@ -106,7 +107,6 @@ function crud_dayOfWeeks($tab){
 // fonction qui renvoi les idPlayer de la table players dans un menu déroulant
 function select_idPlayer($tab){
 
-	$resultat = '<form id="formulaire" action="" method="POST">';
 	$resultat = '<select name="choixIdPlayer">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idPlayer'].'</option>';
@@ -118,9 +118,9 @@ function select_idPlayer($tab){
 
 // fonction qui va afficher toutes les opérations à effectuer sur la table players
 function crud_players($tab){
-	$resultat = '	<form id="formulaire" action="?action=crud" method ="POST">
-						<fieldset>
-							<h3>Ajouter</h3>
+	$resultat = '	
+						<fieldset class="block">
+							<h3 class="block">Ajouter</h3>
 						ID auto-inc : 						'.increment_playersID() .'<br>
 						Name : 					<br>		<input type="text" name="nameInPlayersInput"><br>
 						Firstname : 			<br>		<input type="text" name="firstnameInPlayersInput"><br>
@@ -184,7 +184,7 @@ function crud_players($tab){
 function select_idRoleType($tab){
 
 	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat = '<select name="choixIdRoleType">';
+	$resultat .= '<select name="choixIdRoleType">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['roleTypeId'].'</option>';
 	}
@@ -252,7 +252,7 @@ function crud_roletypes($tab){
 function select_idStaffs($tab){
 
 	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat = '<select name="choixIdStaffs">';
+	$resultat .= '<select name="choixIdStaffs">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idStaff'].'</option>';
 	}
@@ -325,7 +325,7 @@ function crud_staffs($tab){
 function select_idUsers($tab){
 
 	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat = '<select name="choixIdUsers">';
+	$resultat .= '<select name="choixIdUsers">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idUser'].'</option>';
 	}
@@ -404,7 +404,7 @@ function crud_users($tab){
 function select_idTeams($tab){
 
 	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat = '<select name="choixIdTeams">';
+	$resultat .= '<select name="choixIdTeams">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idTeam'].'</option>';
 	}
@@ -428,7 +428,7 @@ function crud_teams($tab){
 					</fieldset>
 					<fieldset>
 						<legend>Modifier</legend>
-							ID users a modifier : '.select_idTeams(listeIdTeams()).'<br>
+							ID TEAMS a modifier (EQUIPE CORRESPONDANT A ID SE TROUVE DANS LE TABLEAU EN BAS): '.select_idTeams(listeIdTeams()).'<br>
 							New Label :  		<br><input type="text" name="newLabelTeams"><br>
 							New Age Min : 	<br><input type="text" name="newAgeMinTeams"><br>
 							New Age Max :			<br><input type="text" name="newAgeMaxTeams"><br>
@@ -441,10 +441,10 @@ function crud_teams($tab){
 						<thead>
 							<tr>
 								<th>ID</th>
-								<th>Label</th>
+								<th>EQUIPE</th>
 								<th>Age Min</th>
 								<th>Age Max</th>
-								<th>Godfather</th>
+								<th>Parrain</th>
 								<th>Ordre</th>
 								<th>Active</th>
 								<th>Operation</th>
@@ -486,7 +486,7 @@ function crud_teams($tab){
 function select_idTypeMatch($tab){
 
 	$resultat = '<form id="formulaire" action="" method="POST">';
-	$resultat = '<select name="choixIdTypeMatch">';
+	$resultat .= '<select name="choixIdTypeMatch">';
 	for ($i=0;$i<count($tab);$i++) {			  
 		$resultat .=	 '<option>'.$tab[$i]['idTypeMatch'].'</option>';
 	}
@@ -652,7 +652,7 @@ function crud_typematchs($tab){
 	                            <legend>ADD A NEW CALENDAR</legend>
 
 	                 ';
-        $teamToSelect = select_team_for_calendar();
+        $teamToSelect = select_team();
         $resultat .= 'TEAM   ';
         $selectMenuTeam = '<select name="teamSelectedForCalendar">';
         for($i = 0; $i<count($teamToSelect); $i++) {
@@ -731,7 +731,7 @@ function crud_typematchs($tab){
 	function show_selected_team_calendar($tab){
 		$resultat  = '	<form id="formulaire" action="?action=crud" method ="POST">';
 		foreach($tab as $elt) {
-			$resultat .= 'ID CALENDAR  <br><input type="text" name="YearTeamInTeamsCalendarUpdate" value='.$elt['idCalendar'].'><br><input type="hidden" 							name="idCalendarCRUD" 		value='.$elt['idCalendar'].'>';
+			$resultat .= 'ID CALENDAR  <br><input type="text" name="YearTeamInTeamsCalendarUpdate" value='.$elt['idCalendar'].'><br><input type="hidden" name="idCalendarCRUD" value='.$elt['idCalendar'].'>';
 			$resultat .= 'ID TEAM      <br><input type="text" name="YearTeamInTeamsCalendarUpdate" value='.$elt['idTeam'].'><br>';
 			$resultat .= 'TEAM :       <br><input type="text" name="YearTeamInTeamsCalendarUpdate" value='.$elt['TEAM'].'><br>';
 			$resultat .= 'YEAR TEAM   <br><input type="text" name="YearTeamInTeamsCalendarUpdate" value='.$elt['Year Team'].'><br>';
@@ -750,6 +750,390 @@ function crud_typematchs($tab){
 		return $resultat;
 	}
 /****************************************************************************************************************************************************************************/
+
+/**************************************************************TeamsDelegues*************************************************************************************************/
+	$globalIdTeaminTeamDelegue = '';
+	function afficher_delegue_par_team($tab){
+		// $resultat = '	<form id="formulaire" action="?action=crud" method ="POST">';
+		
+		$resultat = '<p>Delegues par equipes</p>';
+		$resultat .=	'<table id="tableBalises">
+						<thead>
+							<tr>
+								<th>TEAM</th>
+								<th>DELEGUE</th>
+								<th>ID TEAMDELEGUE</th>
+								<th>ID TEAM</th>
+								<th>ID DELEGUE</th>
+								<th>MAIN DELEGUE</th>
+								<th>YEAR TEAM</th>
+								<th>OPERATION</th>
+							</tr>
+						</thead>
+						<tbody>';
+						
+			foreach($tab as $elt) {
+				
+				$GLOBALS['globalIdTeaminTeamDelegue'] = $elt['idTeam'];
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt['Team'].'</td>';
+				$resultat .=		'<td>'.$elt['Delegue'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeamDelegue'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeam'].'</td><input type="hidden" name="idTeamForADDDelgue" value='.$GLOBALS['globalIdTeaminTeamDelegue'].'>';
+				$resultat .=		'<td>'.$elt['idDelegue'] .'</td>';
+				$resultat .=		'<td>'.$elt['mainDelegue'] .'</td>';
+				$resultat .=		'<td>'.$elt['yearTeam'] .'</td>';
+				$resultat .=		'<td><input type="radio" name="idTeamDelegueCRUD" value='.$elt['idTeamDelegue'].'><input type="submit" name="modifierTeamDelegues" 	value="Modifier" class="actif"></td>';
+				$resultat .=		'</tr>';	
+			}
+			
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+				
+		return $resultat;
+	}
+	
+	function show_selected_team_delegue($tab){
+		$resultat = '<div id="madiv">';
+		if(isset($_POST['modifierTeamDelegues'])){
+			$resultat .= '<input type="hidden" name="ok" value='.$_POST['idTeamDelegueCRUD'].'>';
+			$delegueNotInTeam = delegue_to_add();
+			$resultat .= '<fieldset>';
+			$resultat .= '<legend>Delegue TO ADD AND NOT in '.$tab[0]['label'].' </legend>';
+			$resultat .=	'<table id="tableBalises">
+							<thead>
+								<tr>
+									<th>ID NEW DELEGUE</th>
+									<th>DELEGUE</th>
+									<th>OPERATION</th>
+									</tr>
+							</thead>
+							<tbody>';
+			foreach($delegueNotInTeam as $elt1) {
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt1['idUser'].'</td>';
+				$resultat .=		'<td>'.$elt1['Delegue'].'</td>';
+				$resultat .=		'<td><input type="radio" name="idDelegueToADD" value ='.$elt1['idUser'].'><input type="submit" name="addNewDelegue"	value="ADD" class="actif"><input type="hidden" name="idTeamNewDelegue" value='.$GLOBALS['globalIdTeaminTeamDelegue'].'></td>';
+				$resultat .=		'</tr>';	
+			}
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+			$resultat .= '</fieldset>';		 
+				
+		}		
+		$resultat .= '</div>';
+		$resultat .= '<br>';
+		$resultat .= '<fieldset>';
+		$resultat .= '<legend>UPDATE</legend>';
+		foreach($tab as $elt) {
+			$teamToSelect = select_team();
+			$resultat .= 'TEAM  <br><input type="text" name="TeamInTeamsDelegueUpdate" value='.$elt['label'].' disabled><br>';
+			$resultat .= 'NAME DELEGUE     				<br><input type="text" name="DelegueInTeamsDelegueUpdate" value='.$elt['name'].' disabled><br>';
+			$resultat .= 'FIRSTNAME DELEGUE     		<br><input type="text" name="DelegueInTeamsDelegueUpdate" value='.$elt['firstname'].' disabled><br>';
+			$resultat .= 'ID TEAMDELEGUE    			<br><input type="text" name="IdTeamDelegueInTeamsDelegueUpdate" value='.$elt['idTeamDelegue'].' disabled><br>';
+			$resultat .= 'ID TEAM   					<br><input type="text" name="IdTeamInTeamsDelegueUpdate" value='.$elt['idTeam'].' disabled><br>';
+			$resultat .= 'ID DELEGUE     				<br><input type="text" disabled><br>';
+			$resultat .= '<input type="hidden" value='.$elt['idDelegue'].' name="IdDelegueInTeamsDelegueUpdate">';
+			$resultat .= 'MAIN DELEGUE   				<br><input type="text" name="MainDelegueInTeamsDelegueUpdate" value='.$elt['mainDelegue'].' ><br>';
+			$resultat .= 'YEAR TEAM   					<br><input type="text" name="YearTeamInTeamsDelegueUpdate" value='.$elt['yearTeam'].'><br>';
+			$resultat .= '<input type="hidden" name="idTeamDelegueUpDate" value='.$elt['idTeamDelegue'].'>';
+		}
+		$resultat .= '<p><input type="submit" value="UPDATE" name="updateDelegue"></p>';
+		$resultat .= '</fieldset>';	
+		// $resultat .= '</form>';
+		return $resultat;
+	}
+/****************************************************************************************************************************************************************************/
+
+/**************************************************************************TeamsRanking**************************************************************************************/
+	function afficher_TeamsRanking($tab){
+			$resultat = '';
+			$resultat .= '<fieldset><legend>ADD A NEW RANKING</legend>';
+			$teamToSelect = select_team();
+			$resultat .= 'TEAM <br>';
+			$selectMenuTeam = '<select name="teamSelectedForRanking">';
+				for($i = 0; $i<count($teamToSelect); $i++) {
+					$selectMenuTeam .=	 '<option>'.$teamToSelect[$i].'</option>';
+				}
+			$selectMenuTeam .= '</select>';
+        $resultat .= $selectMenuTeam.'<br><br>';
+			$resultat .= 'NEW YEAR :       	 <br><input type="text" name="NEWyearInRankingUpdate" ><br>';
+			$resultat .= 'NEW PLAYED       	 <br><input type="text" name="NEWplayedInRankingUpdate"><br>';
+			$resultat .= 'NEW WIN   	   	 <br><input type="text" name="NEWwinInRankingUpdate"><br>';
+			$resultat .= 'NEW LOST   	   	 <br><input type="text" name="NEWlostInRankingUpdate"><br>';
+			$resultat .= 'NEW DEUCE  	   	 <br><input type="text" name="NEWdeuceInRankingUpdate"><br>';
+			$resultat .= 'NEW POINTS 	   	 <br><input type="text" name="NEWpointsInRankingUpdate"><br>';
+			$resultat .= 'NEW DATE RANKING   <br><input type="text" name="NEWdateRankingUpdate"> YYYY-MM-DD<br>';
+		$resultat .= '<input type="submit" value="ADD" name="addRanking">';
+		$resultat .= '</fieldset>';
+		
+		$resultat .= '<fieldset><legend>Resultats des TEAMS</legend>';
+		$resultat .=	'<table id="tableBalises">
+						<thead>
+							<tr>
+								<th>ID RANKING</th>
+								<th>ID TEAM</th>
+								<th>YEAR</th>
+								<th>TEAM</th>
+								<th>PLAYED</th>
+								<th>WIN</th>
+								<th>LOST</th>
+								<th>DEUCE</th>
+								<th>POINTS</th>
+								<th>DATE RANKING</th>
+								<th>OPERATION</th>
+							</tr>
+						</thead>
+						<tbody>';
+						
+			foreach($tab as $elt) {
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt['idRanking'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeam'].'</td>';
+				$resultat .=		'<td>'.$elt['myYear'].'</td>';
+				$resultat .=		'<td>'.$elt['name'].'</td>';
+				$resultat .=		'<td>'.$elt['played'] .'</td>';
+				$resultat .=		'<td>'.$elt['win'] .'</td>';
+				$resultat .=		'<td>'.$elt['lost'] .'</td>';
+				$resultat .=		'<td>'.$elt['deuce'] .'</td>';
+				$resultat .=		'<td>'.$elt['points'] .'</td>';
+				$resultat .=		'<td>'.$elt['dateRanking'] .'</td>';
+				$resultat .=		'<td><input type="radio" name="idRanking" value='.$elt['idRanking'].'><input type="submit" name="modifierTeamsRanking" value="Modifier" class="actif"></td>';
+				$resultat .=		'</tr>';	
+			}
+			
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+			
+			 $resultat .=	'</fieldset>';
+			
+				
+		return $resultat;
+	}
+	
+	function afficher_selected_team($tab){
+		$resultat = '<div>';
+		$resultat .= '<div  class="block">';
+		foreach($tab as $elt) {
+			$resultat .= 'ID RANKING  <br><input type="text" name="idRankingUpdate" value='.$elt['idRanking'].' disabled><br><input type="hidden" name="idRankingUpdateCRUD" value='.$elt['idRanking'].'>';
+			$resultat .= 'ID TEAM      <br><input type="text" name="idTeaminRankingUpdate" value='.$elt['idTeam'].' disabled><br><input type="hidden" name="idTeamInRankingUpdateCRUD" value='.$elt['idTeam'].'>';
+			$resultat .= 'YEAR :       <br><input type="text" name="yearInRankingUpdate" value='.$elt['myYear'].'><br>';
+			$resultat .= 'NAME  <br><input type="text" name="nameInRankingUpdate" value='.$elt['name'].' disabled><br>';
+			$resultat .= 'PLAYED     <br><input type="text" name="playedInRankingUpdate" value='.$elt['played'].'><br>';
+			$resultat .= 'WIN   <br><input type="text" name="winInRankingUpdate" value='.$elt['win'].'><br>';
+			$resultat .= 'LOST   <br><input type="text" name="lostInRankingUpdate" value='.$elt['lost'].'><br>';
+			$resultat .= 'DEUCE  <br><input type="text" name="deuceInRankingUpdate" value='.$elt['deuce'].'><br>';
+			$resultat .= 'POINTS <br><input type="text" name="pointsInRankingUpdate" value='.$elt['points'].'><br>';
+			$resultat .= 'DATE RANKING   <br><input type="text" name="dateRankingUpdate" value='.$elt['dateRanking'].'><br>';
+			
+		}
+		$resultat .= '<input type="submit" value="UPDATE" name="updateRanking">';
+		$resultat .= '</div>';
+		
+		
+		$resultat .= '</div>';	
+		return $resultat;
+	}
+/****************************************************************************************************************************************************************************/
+
+/**************************************************************************TeamsTraining*************************************************************************************/
+	function afficher_TeamsTraining($tab){
+			$resultat = '';
+			$resultat .= '<fieldset><legend>ADD NEW TRAINING</legend>';
+			
+			$teamToSelect = select_team();
+			$resultat .= 'TEAM <br>';
+			$selectMenuTeam = '<select name="teamSelectedForTraining">';
+				for($i = 0; $i<count($teamToSelect); $i++) {
+					$selectMenuTeam .=	 '<option>'.$teamToSelect[$i].'</option>';
+				}
+			$selectMenuTeam .= '</select>';
+			$resultat .= $selectMenuTeam.'<br><br>';
+		
+			$dayToSelect = select_day();
+			$resultat .= 'DAY <br>';
+			$selectMenuDay = '<select name="daySelectedForTraining">';
+				for($i = 0; $i<count($dayToSelect); $i++) {
+					$selectMenuDay .=	 '<option>'.$dayToSelect[$i].'</option>';
+				}
+			$selectMenuDay .= '</select>';
+			$resultat .= $selectMenuDay.'<br><br>';
+			
+			$resultat .= 'NEW YEAR :       	 	 <br><input type="text" name="NEWyearInTrainingUpdate" ><br>';
+			$resultat .= 'NEW START TIME       	 <br><input type="text" name="NEWstartInTrainingUpdate"><br>';
+			$resultat .= 'NEW END TIME   	   	 <br><input type="text" name="NEWendInTrainingUpdate"><br>';
+			$resultat .= 'NEW ROOM   	   	  	 <br><input type="text" name="NEWroomInTrainingUpdate"><br>';
+			
+		$resultat .= '<input type="submit" value="ADD" name="addTraining">';
+		$resultat .= '</fieldset>';
+		
+		$resultat .= '<fieldset><legend>Entrainements par equipes</legend>';
+		$resultat .=	'<table id="tableBalises">
+						<thead>
+							<tr>
+								<th>ID TRAINING</th>
+								<th>ID TEAM</th>
+								<th>TEAM</th>
+								<th>CURRENT YEAR</th>
+								<th> ID DAY OF WEEK</th>
+								<th>DAY</th>
+								<th>START TIME</th>
+								<th>END TIME</th>
+								<th>ROOM</th>
+								<th>OPERATION</th>
+							</tr>
+						</thead>
+						<tbody>';
+						
+			foreach($tab as $elt) {
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt['idTraining'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeam'].'</td>';
+				$resultat .=		'<td>'.$elt['Team'].'</td>';
+				$resultat .=		'<td>'.$elt['currentYear'].'</td>';
+				$resultat .=		'<td>'.$elt['dayOfWeek'] .'</td>';
+				$resultat .=		'<td>'.$elt['label'] .'</td>';
+				$resultat .=		'<td>'.$elt['startTime'] .'</td>';
+				$resultat .=		'<td>'.$elt['endTime'] .'</td>';
+				$resultat .=		'<td>'.$elt['room'] .'</td>';
+				$resultat .=		'<td><input type="radio" name="idTrainingTeamsTraining" value='.$elt['idTraining'].'><input type="submit" name="modifierTeamsTraining" value="Modifier" class="actif"></td>';
+				$resultat .=		'</tr>';	
+			}
+			
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+			
+			 $resultat .=	'</fieldset>';	
+				
+		return $resultat;
+	}
+	
+	function afficher_selected_teamTraining($tab){
+		$resultat = '<div>';
+		$resultat .= '<div  class="block">';
+		foreach($tab as $elt) {
+			$resultat .= 'ID TRAINING  <br><input type="text" name="idTrainingUpdate" value='.$elt['idTraining'].' disabled><br><input type="hidden" name="idTrainingUpdateCRUD" value='.$elt['idTraining'].'>';
+			$resultat .= 'ID TEAM      <br><input type="text" name="idTeaminTrainingUpdate" value='.$elt['idTeam'].' disabled><br><input type="hidden" name="idTeamInTrainingUpdateCRUD" value='.$elt['idTeam'].'>';
+			$resultat .= 'TEAM :       <br><textarea readonly name="labelTeamTrainingUpdate" style="width: 143px; height: 16px;">'.$elt['Team'].'</textarea><br>';
+			$resultat .= 'CURRENT YEAR  <br><input type="text" name="currentYearInTrainingUpdate" value='.$elt['currentYear'].' disabled><br>';
+			$resultat .= 'ID DAY     <br><input type="text" name="idDayInTrainingUpdate" value='.$elt['dayOfWeek'].' disabled><br>';
+			$resultat .= 'DAY   <br><input type="text"  value='.$elt['label'].' disabled><br>';
+			$resultat .= 'START TIME   <br><input type="text" name="startTimeTrainingUpdate" value='.$elt['startTime'].'><br>';
+			$resultat .= 'END TIME  <br><input type="text" name="endTimeTrainingUpdate" value='.$elt['endTime'].'><br>';
+			$resultat .= 'ROOM <br><textarea name="roomTrainingUpdate" style="width: 194px; height: 17px;">'.$elt['room'].'</textarea><br>';
+			
+		}
+		$resultat .= '<input type="submit" value="UPDATE" name="updateTraining">';
+		$resultat .= '</div>';
+		
+		
+		$resultat .= '</div>';	
+		return $resultat;
+	}
+	
+/****************************************************************************************************************************************************************************/
+
+
+/**************************************************************************TeamsGames*************************************************************************************/
+	function afficher_TeamsGames($tab){
+			$resultat = '';
+			$resultat .= '<fieldset class="block"><legend>ADD NEW GAMES</legend>';
+			
+			$teamToSelect = select_team();
+			$resultat .= 'TEAM <br>';
+			$selectMenuTeam = '<select name="teamSelectedForGames">';
+				for($i = 0; $i<count($teamToSelect); $i++) {
+					$selectMenuTeam .=	 '<option>'.$teamToSelect[$i].'</option>';
+				}
+			$selectMenuTeam .= '</select>';
+			$resultat .= $selectMenuTeam.'<br><br>';
+		
+			$dayToSelect = select_day();
+			$resultat .= 'DAY <br>';
+			$selectMenuDay = '<select name="daySelectedForGames">';
+				for($i = 0; $i<count($dayToSelect); $i++) {
+					$selectMenuDay .=	 '<option>'.$dayToSelect[$i].'</option>';
+				}
+			$selectMenuDay .= '</select>';
+			$resultat .= $selectMenuDay.'<br><br>';
+			
+			$resultat .= 'NEW YEAR :       	 	 <br><input type="text" name="NEWyearInGamesUpdate" ><br>';
+			$resultat .= 'NEW GAME TIME :        <br><input type="text" name="NEWgameTimeInGamesUpdate" ><br>';
+			
+		$resultat .= '<input type="submit" value="ADD" name="addGames">';
+		$resultat .= '</fieldset>';
+		
+		$resultat .= '<fieldset><legend>MATCH par equipes</legend>';
+		$resultat .=	'<table id="tableBalises">
+						<thead>
+							<tr>
+								<th>ID TEAM GAME</th>
+								<th>ID TEAM</th>
+								<th>TEAM</th>
+								<th>CURRENT YEAR</th>
+								<th>ID GAME DAY</th>
+								<th>DAY</th>
+								<th>GAME TIME</th>
+								<th>OPERATION</th>
+							</tr>
+						</thead>
+						<tbody>';
+						
+			foreach($tab as $elt) {
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt['idTeamGame'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeam'].'</td>';
+				$resultat .=		'<td>'.$elt['Team'].'</td>';
+				$resultat .=		'<td>'.$elt['currentYear'].'</td>';
+				$resultat .=		'<td>'.$elt['gameDay'] .'</td>';
+				$resultat .=		'<td>'.$elt['label'] .'</td>';
+				$resultat .=		'<td>'.$elt['gameTime'] .'</td>';
+				$resultat .=		'<td><input type="radio" name="idTeamGameTeamsGames" value='.$elt['idTeamGame'].'><input type="submit" name="modifierTeamsGames" value="Modifier" class="actif"></td>';
+				$resultat .=		'</tr>';	
+			}
+			
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+			
+			 $resultat .=	'</fieldset>';	
+				
+		return $resultat;
+	}
+	
+	function afficher_selected_teamGames($tab){
+		$resultat = '<div>';
+		$resultat .= '<fieldset><legend>UPDATE</legend>';
+		foreach($tab as $elt) {
+			$resultat .= 'ID TEAM GAME  <br><input type="text" name="idTeamGameUpdate" value='.$elt['idTeamGame'].' disabled><br><input type="hidden" name="idTeamGameUpdateCRUD" value='.$elt['idTeamGame'].'>';
+			$resultat .= 'ID TEAM      <br><input type="text" name="idTeaminGamesUpdate" value='.$elt['idTeam'].' disabled><br><input type="hidden" name="idTeamInGamesUpdateCRUD" value='.$elt['idTeam'].'>';
+			$resultat .= 'TEAM :       <br><textarea readonly name="labelTeamGamesUpdate" style="width: 143px; height: 16px;">'.$elt['Team'].'</textarea><br>';
+			$resultat .= 'CURRENT YEAR  <br><input type="text" name="currentYearInGamesUpdate" value='.$elt['currentYear'].' ><br>';
+			$resultat .= 'ID DAY     <br><input type="text" name="idDayInGamesUpdate" value='.$elt['gameDay'].' disabled><br>';
+			$resultat .= 'DAY   <br><input type="text"  value='.$elt['label'].' disabled><br>';
+			$resultat .= 'GAME TIME   <br><input type="text" name="gameTimeGamesUpdate" value='.$elt['gameTime'].'><br>';
+			$resultat .= '</textarea><br>';
+			
+		}
+		$resultat .= '<input type="submit" value="UPDATE" name="updateGames">';
+		$resultat .= '</fieldset>';
+		
+		
+		$resultat .= '</div>';	
+		return $resultat;
+	}
+	
+/****************************************************************************************************************************************************************************/
+
 
 // Fonction qui va afficher le contenue de la table teamsplayers qui contient des joueurs inconnues si il y'en a
 function afficher_joueurs_Inconnues($tab){

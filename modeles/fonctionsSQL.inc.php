@@ -1014,7 +1014,7 @@ function coachs_par_teams_SELECT(){
 	
 	function show_teams_calendars(){
 		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
-		$query = 'select tcld.idCalendar, tcld.idTeam, tcld.yearTeam as "Year Team",t.label as "TEAM", tcld.inTeam as "IN TEAM", tcld.outTeam as "OUT TEAM", tcld.scoreIn as "SCORE IN", tcld.scoreOut as "SCORE OUT", tcld.TypeMatch, tcld.modified, tcld.matchNumber as "#MATCH", tcld.timeMatch as "TIME MATCH", tcld.dateMatch as "DATE MATCH" from teams t, teamscalendar tcld, typesmatchs tm where t.idTeam = tcld.idTeam and tm.idTypeMatch = tcld.TypeMatch ';
+		$query = 'select tcld.idCalendar, tcld.idTeam, tcld.yearTeam as "Year Team",t.label as "TEAM", tcld.inTeam as "IN TEAM", tcld.outTeam as "OUT TEAM", tcld.scoreIn as "SCORE IN", tcld.scoreOut as "SCORE OUT", tcld.TypeMatch, tcld.modified, tcld.matchNumber as "#MATCH", tcld.timeMatch as "TIME MATCH", tcld.dateMatch as "DATE MATCH" from teams t right join teamscalendar tcld on t.idTeam = tcld.idTeam order by tcld.idCalendar asc';
 		$result = $dbh->query($query);
 		$tab = array();
 		$i=0;
@@ -1060,13 +1060,13 @@ function coachs_par_teams_SELECT(){
 			$tab[$i]['TIME MATCH'] = $row['TIME MATCH'];
 			$tab[$i]['DATE MATCH'] = $row['DATE MATCH'];
 			$i++;
-		}	
-		
+		}
 		$dbh=null;
 		return $tab;
 	}
 	
 	function updateCalendar(){
+		if(isset($_POST['updateDelegue'])){
 		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
 		$yearTeam = $_POST['YearTeamInTeamsCalendarUpdate'];
 		$idCalendar = $_POST['idCalendarCRUD'];
@@ -1081,10 +1081,27 @@ function coachs_par_teams_SELECT(){
 		$TypeMatch = $_POST['TypeMatchInTeamsCalendarUpdate'];
 		$query = "UPDATE teamscalendar SET  yearTeam = '$yearTeam', inTeam = '$inTeam', outTeam = '$outTeam', scoreIn = '$scoreIn', scoreOut = '$scoreOut', modified = '$modified', matchNumber = '$matchNumber', dateMatch = '$dateMatch', timeMatch = '$timeMatch', TypeMatch = '$TypeMatch' WHERE idCalendar = '$idCalendar'";
 		$dbh->query($query);
+		}
 		$dbh = null;
+		
 	}
 
-    function select_team_for_calendar(){
+    
+	function select_day(){
+        $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+        $query = 'SELECT label FROM daysofweek ORDER BY idDay ASC';
+        $result = $dbh->query($query);
+        $tab = array();
+        $i=0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $tab[$i] = $row['label'];
+            $i++;
+        }
+        $dbh=null;
+        return $tab;
+    }
+	
+	function select_team(){
         $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
         $query = 'SELECT label FROM teams';
         $result = $dbh->query($query);
@@ -1098,14 +1115,411 @@ function coachs_par_teams_SELECT(){
         return $tab;
     }
 
+	function select_typeMatch_for_calendar(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = 'SELECT idTypeMatch FROM typesmatchs';
+		$result = $dbh->query($query);
+		$tab = array();
+		$i=0;
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$tab[$i] = $row['idTypeMatch'];
+			$i++;
+		}
+		$dbh=null;
+		return $tab;
+}
 
     function add_new_calendar(){
         $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = 'select idTeam from teams where label="'.$_POST['teamSelectedForCalendar'].'"';
+		$result = $dbh->query($query);
+		$r = $result->fetch();
+		$idTeam = $r['idTeam'];
+		
+        $yearTeam = $_POST['newYearTeamInTeamsCalendarUpdate'];
+        $idCalendar = increment_teamscalendarID();
+        $inTeam = $_POST['newIndTeamInTeamsCalendarUpdate'];
+        $outTeam = $_POST['newOutTeamInTeamsCalendarUpdate'];
+        $scoreIn = $_POST['newScoreINInTeamsCalendarUpdate'];
+        $scoreOut = $_POST['newScoreOUTInTeamsCalendarUpdate'];
+        $modified = $_POST['newmodifiedInTeamsCalendarUpdate'];
+        $matchNumber = $_POST['newnumMatchInTeamsCalendarUpdate'];
+        $dateMatch = $_POST['newDateMatchInTeamsCalendarUpdate'];
+        $timeMatch = $_POST['newTimeMatchInTeamsCalendarUpdate'];
+        $TypeMatch = $_POST['newTypeMatchInTeamsCalendarUpdate'];
+        $query = "INSERT INTO teamscalendar (idCalendar, idTeam, yearTeam, inTeam, outTeam, scoreIn, scoreOut, modified, matchNumber, dateMatch, timeMatch, TypeMatch) VALUES('$idCalendar', '$idTeam','$yearTeam', '$inTeam', '$outTeam', '$scoreIn', '$scoreOut', '$modified', '$matchNumber', '$dateMatch', '$timeMatch', '$TypeMatch')";
+        $dbh->query($query);
 
+        $dbh=null;
     }
 
 	
 /***********************************************************************************************************************************************************************/
+
+/**************************************************************TeamsDelegues*************************************************************************************************/
+
+	function afficher_delegues_par_teams(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = 'SELECT t.label AS "Team", concat(u.name," " ,u.firstname) AS "Delegue", td.* from teamsdelegues td, users u, teams t WHERE u.idUser = td.idDelegue AND 	td.idTeam = t.idTeam ORDER BY `t`.`label` ASC, `td`.`yearTeam` ASC ';
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['Team'] = $row['Team'];
+			$tab[$i]['Delegue'] = $row['Delegue'];
+			$tab[$i]['idTeamDelegue'] = $row['idTeamDelegue'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['idDelegue'] = $row['idDelegue'];
+			$tab[$i]['mainDelegue'] = $row['mainDelegue'];
+			$tab[$i]['yearTeam'] = $row['yearTeam'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	} 
+	
+	 
+	
+	function selected_team_delegueAModifier(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		if(!empty($_POST['idTeamDelegueCRUD'])){
+			$idTeamDelegue = $_POST['idTeamDelegueCRUD'];
+		}else{
+			$idTeamDelegue = $_POST['idTeamDelegueUpDate'];
+		}
+		$query = "SELECT t.label, u.name, u.firstname, td.idTeamDelegue, td.idTeam, td.idDelegue, td.mainDelegue, td.yearTeam from teamsdelegues td, users u, teams t WHERE u.idUser = td.idDelegue AND td.idTeam = t.idTeam and idTeamDelegue = $idTeamDelegue";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['name'] = $row['name'];
+			$tab[$i]['firstname'] = $row['firstname'];
+			$tab[$i]['idTeamDelegue'] = $row['idTeamDelegue'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['idDelegue'] = $row['idDelegue'];
+			$tab[$i]['mainDelegue'] = $row['mainDelegue'];
+			$tab[$i]['yearTeam'] = $row['yearTeam'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function update_delegue(){
+		$idTeamDelegue = $_POST['idTeamDelegueUpDate'];
+		$idDelegue = $_POST['IdDelegueInTeamsDelegueUpdate'];
+		$mainDelegue = $_POST['MainDelegueInTeamsDelegueUpdate'];
+		$yearTeam = $_POST['YearTeamInTeamsDelegueUpdate'];
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$query = "UPDATE teamsdelegues SET mainDelegue = $mainDelegue, yearTeam = $yearTeam WHERE idTeamDelegue = $idTeamDelegue and idDelegue = $idDelegue";
+		$dbh->query($query);
+		$dbh = null;
+	}
+	
+	function delegue_to_add(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$idTeamDelegue = $_POST['idTeamDelegueCRUD'];
+		$queryIDTeam = "select idTeam from teamsdelegues where idTeamDelegue = $idTeamDelegue";
+		$resultForIdTeam = $dbh->query($queryIDTeam)->fetch();
+		$idTeam = $resultForIdTeam['idTeam'];
+		$query = 'SELECT u.idUser, concat(u.firstname, " " ,u.name) AS "Delegue" FROM users u, roletype rt, roles r WHERE u.idUser = r.idUser AND r.idRoleType = rt.roleTypeId AND rt.label = "Delegue" AND u.idUser NOT IN (select idDelegue FROM teamsdelegues WHERE idTeam ='.$idTeam.')';
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idUser'] = $row['idUser'];
+			$tab[$i]['Delegue'] = $row['Delegue'];
+			$i++;
+		}
+		$dbh = null;
+		
+		return $tab;
+	}
+	
+	function add_new_delegue(){
+	
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$newIdTeamDelegue = increment_teamsdeleguesID(); 
+		$idDelegue = $_POST['idDelegueToADD'];
+		$idTeamDelegue = $_POST['ok'];
+		$queryIDTeam = "select idTeam from teamsdelegues where idTeamDelegue = $idTeamDelegue";
+		$resultForIdTeam = $dbh->query($queryIDTeam)->fetch();
+		$idTeam = $resultForIdTeam['idTeam'];
+		$yearTeam = $_POST['YearTeamInTeamsDelegueUpdate'];
+		$query = "INSERT INTO teamsdelegues (idTeamDelegue, idDelegue, idTeam, yearTeam, mainDelegue) VALUES('$newIdTeamDelegue', '$idDelegue', '$idTeam', '$yearTeam', 0)";
+		$dbh->query($query);
+		$dbh = null;
+	}
+/****************************************************************************************************************************************************************************/
+
+/***********************************************************TeamsRanking*****************************************************************************************************/
+	function afficher_classement_teamsRanking(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = " SELECT * FROM teamsranking ";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idRanking'] = $row['idRanking'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['myYear'] = $row['myYear'];
+			$tab[$i]['name'] = $row['name'];
+			$tab[$i]['played'] = $row['played'];
+			$tab[$i]['win'] = $row['win'];
+			$tab[$i]['lost'] = $row['lost'];
+			$tab[$i]['deuce'] = $row['deuce'];
+			$tab[$i]['points'] = $row['points'];
+			$tab[$i]['dateRanking'] = $row['dateRanking'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function add_new_ranking(){
+        $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = 'select idTeam from teams where label="'.$_POST['teamSelectedForRanking'].'"';
+		$result = $dbh->query($query);
+		$r = $result->fetch();
+		$idRanking = increment_teamsrankingID();
+		$idTeam = $r['idTeam'];
+		$name = $_POST['teamSelectedForRanking'];
+        $myYear = $_POST['NEWyearInRankingUpdate'];
+        $played = $_POST['NEWplayedInRankingUpdate'];
+        $win = $_POST['NEWwinInRankingUpdate'];
+        $lost = $_POST['NEWlostInRankingUpdate'];
+        $deuce = $_POST['NEWdeuceInRankingUpdate'];
+        $points = $_POST['NEWpointsInRankingUpdate'];
+        $dateRanking = $_POST['NEWdateRankingUpdate'];
+        $query = "INSERT INTO teamsranking (idRanking, idTeam, myYear, name, played, win, lost, deuce, points, dateRanking) VALUES('$idRanking', '$idTeam', '$myYear', '$name', '$played', '$win', '$lost', '$deuce', '$points', '$dateRanking')";
+        $dbh->query($query);
+
+        $dbh=null;
+    }
+	
+	function selected_classement_teamsRanking(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		if(!empty($_POST['idRanking'])){
+			$idRanking = $_POST['idRanking'];
+		}else{
+			$idRanking = $_POST['idRankingUpdateCRUD'];
+		}
+		$query = " SELECT * FROM teamsranking WHERE idRanking = $idRanking";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idRanking'] = $row['idRanking'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['myYear'] = $row['myYear'];
+			$tab[$i]['name'] = $row['name'];
+			$tab[$i]['played'] = $row['played'];
+			$tab[$i]['win'] = $row['win'];
+			$tab[$i]['lost'] = $row['lost'];
+			$tab[$i]['deuce'] = $row['deuce'];
+			$tab[$i]['points'] = $row['points'];
+			$tab[$i]['dateRanking'] = $row['dateRanking'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function update_ranking(){
+		$idRanking = $_POST['idRankingUpdateCRUD'];
+		$idTeam = $_POST['idTeamInRankingUpdateCRUD'];
+		$myYear = $_POST['yearInRankingUpdate'];
+		$played = $_POST['playedInRankingUpdate'];
+		$win = $_POST['winInRankingUpdate'];
+		$lost = $_POST['lostInRankingUpdate'];
+		$deuce = $_POST['deuceInRankingUpdate'];
+		$points = $_POST['pointsInRankingUpdate'];
+		$dateRanking = $_POST['dateRankingUpdate'];
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$query = "UPDATE teamsranking SET myYear = $myYear, played = $played, win = $win, lost = $lost, deuce = $deuce, points = $points, dateRanking = $dateRanking WHERE idRanking = $idRanking and idTeam = $idTeam";
+		$dbh->query($query);
+		$dbh = null;
+	}
+	
+	
+/****************************************************************************************************************************************************************************/
+
+/****************************************************************************TEAMSTRAINING***********************************************************************************/
+	function afficher_training(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = " SELECT tt.idTraining, tt.idTeam, t.label as 'Team', tt.currentYear, tt.dayOfWeek, d.label, tt.startTime, tt.endTime, tt.room FROM teamstraining tt, teams t, daysofweek d WHERE d.idDay = tt.dayOfWeek AND t.idTeam = tt.idTeam";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTraining'] = $row['idTraining'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['Team'] = $row['Team'];
+			$tab[$i]['currentYear'] = $row['currentYear'];
+			$tab[$i]['dayOfWeek'] = $row['dayOfWeek'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['startTime'] = $row['startTime'];
+			$tab[$i]['endTime'] = $row['endTime'];
+			$tab[$i]['room'] = $row['room'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function add_new_training(){
+        $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		
+		$queryIdTeam = 'select idTeam from teams where label="'.$_POST['teamSelectedForTraining'].'"';
+		$resultIdTeam = $dbh->query($queryIdTeam);
+		$rIdTeam = $resultIdTeam->fetch();
+		
+		$queryIdTDay = 'select idDay from daysofweek where label="'.$_POST['daySelectedForTraining'].'"';
+		$resultIdDay = $dbh->query($queryIdTDay);
+		$rIdDay = $resultIdDay->fetch();
+		
+		$idTraining = increment_teamsTrainingID();
+		$idTeam = $rIdTeam['idTeam'];
+		$dayOfWeek = $rIdDay['idDay'];
+        $currentYear = $_POST['NEWyearInTrainingUpdate'];
+        $startTime = $_POST['NEWstartInTrainingUpdate'];
+        $endTime = $_POST['NEWendInTrainingUpdate'];
+        $room = $_POST['NEWroomInTrainingUpdate'];
+        $query = "INSERT INTO teamstraining (idTraining, idTeam, dayOfWeek, currentYear, startTime, endTime, room) VALUES('$idTraining', '$idTeam', '$dayOfWeek', '$currentYear', '$startTime', '$endTime', '$room')";
+        $dbh->query($query);
+
+        $dbh=null;
+    }
+	
+	function selected_team_training(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		if(!empty($_POST['idTrainingTeamsTraining'])){
+			$idTraining = $_POST['idTrainingTeamsTraining'];
+		}else{
+			$idTraining = $_POST['idTrainingUpdateCRUD'];
+		}
+		$query = " SELECT tt.idTraining, tt.idTeam, t.label as 'Team', tt.currentYear, tt.dayOfWeek, d.label, tt.startTime, tt.endTime, tt.room FROM teamstraining tt, teams t, daysofweek d WHERE d.idDay = tt.dayOfWeek AND t.idTeam = tt.idTeam AND tt.idTraining = $idTraining";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTraining'] = $row['idTraining'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['Team'] = $row['Team'];
+			$tab[$i]['currentYear'] = $row['currentYear'];
+			$tab[$i]['dayOfWeek'] = $row['dayOfWeek'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['startTime'] = $row['startTime'];
+			$tab[$i]['endTime'] = $row['endTime'];
+			$tab[$i]['room'] = $row['room'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function update_training(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$idTraining = $_POST['idTrainingUpdateCRUD'];
+		$idTeam = $_POST['idTeamInTrainingUpdateCRUD'];
+		$startTime = $_POST['startTimeTrainingUpdate'];
+		$endTime = $_POST['endTimeTrainingUpdate'];
+		$room = $_POST['roomTrainingUpdate'];
+		$query = "UPDATE `teamstraining` SET `startTime`='$startTime',`endTime`='$endTime',`room`='$room' WHERE `idTraining`=$idTraining AND `idTeam`=$idTeam";
+		// $query = "UPDATE teamstraining SET startTime = $startTime, endTime = $endTime, room = $room WHERE idTraining = $idTraining AND idTeam = $idTeam ";
+		$dbh->query($query);
+		// echo "$idTraining -- $idTeam -- $startTime -- $endTime -- $room ";
+		$dbh = null;
+	}
+	
+	
+/****************************************************************************************************************************************************************************/
+
+/****************************************************************************TEAMSGAMES***********************************************************************************/
+	function afficher_games(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = " SELECT idTeamGame, tg.idTeam, t.label as 'Team', currentYear, gameDay, d.label, gameTime FROM `teamsgames` tg, teams t, daysofweek d WHERE d.idDay = tg.gameDay AND t.idTeam = tg.idTeam";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTeamGame'] = $row['idTeamGame'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['Team'] = $row['Team'];
+			$tab[$i]['currentYear'] = $row['currentYear'];
+			$tab[$i]['gameDay'] = $row['gameDay'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['gameTime'] = $row['gameTime'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function add_new_games(){
+        $dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		
+		$queryIdTeam = 'SELECT idTeam FROM teams WHERE label="'.$_POST['teamSelectedForGames'].'"';
+		$resultIdTeam = $dbh->query($queryIdTeam);
+		$rIdTeam = $resultIdTeam->fetch();
+		
+		$queryIdTDay = 'SELECT idDay FROM daysofweek WHERE label="'.$_POST['daySelectedForGames'].'"';
+		$resultIdDay = $dbh->query($queryIdTDay);
+		$rIdDay = $resultIdDay->fetch();
+		
+		$idTeamGame = increment_teamsgamesID();
+		$idTeam = $rIdTeam['idTeam'];
+		$gameDay = $rIdDay['idDay'];
+        $currentYear = $_POST['NEWyearInGamesUpdate'];
+        $gameTime = $_POST['NEWgameTimeInGamesUpdate'];
+        $query = "INSERT INTO teamsgames (idTeamGame, idTeam, gameDay, currentYear, gameTime) VALUES('$idTeamGame', '$idTeam', '$gameDay', '$currentYear', '$gameTime')";
+        $dbh->query($query);
+
+        $dbh=null;
+    }
+	
+	function selected_team_games(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		if(!empty($_POST['idTeamGameTeamsGames'])){
+			$idTeamGame = $_POST['idTeamGameTeamsGames'];
+		}else{
+			$idTeamGame = $_POST['idTeamGameUpdateCRUD'];
+		}
+		$query = " SELECT idTeamGame, tg.idTeam, t.label as 'Team', currentYear, gameDay, d.label, gameTime FROM `teamsgames` tg, teams t, daysofweek d WHERE d.idDay = tg.gameDay AND t.idTeam = tg.idTeam and tg.idTeamGame = $idTeamGame";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTeamGame'] = $row['idTeamGame'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['Team'] = $row['Team'];
+			$tab[$i]['currentYear'] = $row['currentYear'];
+			$tab[$i]['gameDay'] = $row['gameDay'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['gameTime'] = $row['gameTime'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function update_games(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$idTeamGame = $_POST['idTeamGameUpdateCRUD'];
+		$idTeam = $_POST['idTeamInGamesUpdateCRUD'];
+		$gameTime = $_POST['gameTimeGamesUpdate'];
+		$currentYear = $_POST['currentYearInGamesUpdate'];
+		$query = "UPDATE `teamsgames` SET `gameTime`='$gameTime',`currentYear`='$currentYear' WHERE `idTeamGame`=$idTeamGame AND `idTeam`=$idTeam";
+		// $query = "UPDATE teamstraining SET startTime = $startTime, endTime = $endTime, room = $room WHERE idTraining = $idTraining AND idTeam = $idTeam ";
+		$dbh->query($query);
+		// echo "$idTraining -- $idTeam -- $startTime -- $endTime -- $room ";
+		$dbh = null;
+	}
+	
+	
+/****************************************************************************************************************************************************************************/
+
 
 // Fonction qui va afficher (si il y'en a) 
 //les joueurs de la table teamsplayers 
