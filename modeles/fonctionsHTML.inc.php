@@ -547,7 +547,8 @@ function crud_typematchs($tab){
 	
 	
 	function show_coaches_per_team($tab){
-		$resultat  = '<form id="formulaire" action="?action=crud" method ="POST">';
+		$resultat  = '';
+		$resultat .= '<fieldset class="block"><legend>Coach IN '.$tab[0]['Teams'].' </legend>';
 		$resultat .= '<table id="tableBalises">
 						<thead>
 							<tr>
@@ -555,6 +556,7 @@ function crud_typematchs($tab){
 								<th>ID TEAM</th>
 								<th>ID COACH</th>
 								<th>COACHE(S)</th>
+								<th>OPERATION</th>
 							</tr>
 						</thead>
 						<tbody>';
@@ -563,24 +565,26 @@ function crud_typematchs($tab){
 			   $id = '';
 		foreach($tab as $elt) {
 			   $id = $elt['idTeam'];
-		$resultat .=		'<td>'.$elt['idTeam'].'</td>';
-		$resultat .=		'<td>'.$elt['idCoach'].'</td>';
-		$resultat .=		'<td><input type="radio" name="idCoachToDel" value='.$elt['idCoach'].'><input type="submit" name="delCoach" value="delete" class="actif"> '.$elt['Coach'] .'</td>';
-		$resultat .=		'</tr>';	 
-	}
+			$resultat .=		'<td>'.$elt['idTeam'].'</td>';
+			$resultat .=		'<td>'.$elt['idCoach'].'</td>';
+			$resultat .=		'<td>'.$elt['Coach'].'</td>';
+			$resultat .=		'<td><input type="radio" name="idCoachToDel" value='.$elt['idCoach'].'><input type="submit" name="delCoach" value="DELETE" class="actif"></td>';
+			$resultat .=		'</tr>';	 
+		}
 		
 	$resultat .= '	
 					</tbody>
-				   </table>	';
-	$resultat .= '<hr>
+				   </table>	
+				   </fieldset>';
+	$resultat .= '
+					<fieldset >
 					<legend>ADD A NEW COACH IN '.$tab[0]['Teams'].' </legend>
 					<table id="tableBalises">
 						<thead>
 							<tr>
 								<th>ID USER</th>
 								<th>COACH</th>
-								<th>MAIN COACH</th>
-								<th>YEARTEAM</th>
+								<th>OPERATION</th>
 							</tr>
 						</thead>
 						<tbody>';
@@ -589,22 +593,22 @@ function crud_typematchs($tab){
 	foreach($tabCoachNotInTeam as $elt2){
 		$resultat .= '<input type="hidden" name="nomDeLEquipe" value='.$id.'>';
 		$resultat .= '<tr>';
-		$resultat .= '<td>'.$elt2['idUser'].'</td>';		
-		$resultat .= '<td><input type="radio" value='.$elt2['idUser'].' name="newCoach"><input type="submit" value="ADD" name="addNewCoach"  class="actif">'.$elt2['Coach'].'</td>';
-		$resultat .= '<td><input type="text" name="newMainCoachTeam"></td>';
-		$resultat .= '<td><input type="text" name="newYearTeamTeam"></td>';
+		$resultat .= '<td>'.$elt2['idUser'].'</td>';
+		$resultat .= '<td>'.$elt2['Coach'].'</td>';			
+		$resultat .= '<td><input type="radio" value='.$elt2['idUser'].' name="newCoach"><input type="submit" value="ADD" name="addNewCoach"  class="actif"></td>';
 		$resultat .= '</tr>';
 	}				
 					
 	$resultat .=   '</tbody>
-					</table>		   
-				    </form>';
+					</table>
+					</fieldset>';
 						
 	return $resultat;
 	}
 	
+	
 	function afficher_coachs_par_equipes($tab){
-		$resultat  = '	<form id="formulaire" action="?action=crud" method ="POST">';
+		$resultat  = '';
 		$resultat .=	'<p>Liste des equipes avec leurs entraineurs</p>';	
 		$resultat .=	'<table id="tableBalises" >
 						<thead>
@@ -639,8 +643,7 @@ function crud_typematchs($tab){
 	$resultat .= '	
 					</tbody>
 					</thead>
-				   </table>
-				   </form>';
+				   </table>';
 	return $resultat;
 	}
 	
@@ -1134,6 +1137,112 @@ function crud_typematchs($tab){
 	
 /****************************************************************************************************************************************************************************/
 
+/**************************************************************TEAMSPLAYERS*************************************************************************************************/
+	$globalIdTeaminTeamPlayer = '';
+	function afficher_players_par_team($tab){
+		// $resultat = '	<form id="formulaire" action="?action=crud" method ="POST">';
+		
+		$resultat = '<p>Players par equipes</p>';
+		$resultat .=	'<table id="tableBalises">
+						<thead>
+							<tr>
+								<th>ID TEAM PLAYER</th>
+								<th>ID TEAM</th>
+								<th>TEAM</th>
+								<th>ID PLAYER</th>
+								<th>PLAYER</th>
+								<th>NUMBER</th>
+								<th>POSITION</th>
+								<th>YEAR TEAM</th>
+								<th>OPERATION</th>
+							</tr>
+						</thead>
+						<tbody>';
+						
+			foreach($tab as $elt) {
+				
+				$GLOBALS['globalIdTeaminTeamPlayer'] = $elt['idTeam'];
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt['idTeamPlayer'].'</td>';
+				$resultat .=		'<td>'.$elt['idTeam'].'</td>';
+				$resultat .=		'<td>'.$elt['label'].'</td>';
+				$resultat .=		'<td>'.$elt['idPlayer'].'</td>';
+				$resultat .=		'<td>'.$elt['Player'].'</td><input type="hidden" name="idTeamForADDPlayer" value='.$GLOBALS['globalIdTeaminTeamPlayer'].'>';
+				$resultat .=		'<td>'.$elt['number'] .'</td>';
+				$resultat .=		'<td>'.$elt['position'] .'</td>';
+				$resultat .=		'<td>'.$elt['yearTeam'] .'</td>';
+				$resultat .=		'<td><input type="radio" name="idTeamPlayerCRUD" value='.$elt['idTeamPlayer'].'><input type="submit" name="modifierTeamPlayer" 	value="Modifier" class="actif"></td>';
+				$resultat .=		'</tr>';	
+			}
+			
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+				
+		return $resultat;
+	}
+	
+	function show_selected_team_players($tab){
+		$resultat = '<div id="madiv">';
+		if(isset($_POST['modifierTeamPlayer'])){ 
+			$resultat .= '<input type="hidden" name="idTeamPlayerCRUDD" value='.$_POST['idTeamPlayerCRUD'].'>';
+			$playersNotInTeam = players_to_add();
+			$resultat .= '<fieldset>';
+			$resultat .= '<legend>PLAYERS TO ADD AND NOT in '.$tab[0]['label'].' </legend>';
+			$resultat .=	'<table id="tableBalises">
+							<thead>
+								<tr>
+									<th>ID NEW PLAYER</th>
+									<th>PLAYER</th>
+									<th>OPERATION</th>
+									</tr>
+							</thead>
+							<tbody>';
+			foreach($playersNotInTeam as $elt1) {
+				$resultat .=		'<tr>';
+				$resultat .=		'<td>'.$elt1['idPlayer'].'</td>';
+				$resultat .=		'<td>'.$elt1['Player'].'</td>';
+				$resultat .=		'<td><input type="radio" name="idPlayereToADD" value ='.$elt1['idPlayer'].'><input type="submit" name="addNewPlayer" value="ADD" class="actif"><input type="hidden" name="idTeamNewPlayer" value='.$GLOBALS['globalIdTeaminTeamPlayer'].'></td>';
+				$resultat .=		'</tr>';	
+			}
+			$resultat .= '	
+					</tbody>
+					</thead>
+				   </table>';
+			$resultat .= '</fieldset>';		 
+				
+		}		
+		$resultat .= '</div>';
+		$resultat .= '<br>';
+		$resultat .= '<fieldset>';
+		$resultat .= '<legend>UPDATE</legend>';
+		foreach($tab as $elt) {
+			$teamToSelect = select_team();
+			$resultat .= 'ID TEAM PLAYER  	<br><input type="text" name="idTeamPlayerInTeamsPlayerUpdate" value='.$elt['idTeamPlayer'].' disabled><br>';
+			
+			$resultat .= 'ID TEAM    		<br><input type="text" name="IdTeamInTeamsPlayerUpdate" value='.$elt['idTeam'].' disabled><br>';
+			
+			$resultat .= 'ID PLAYER 		<br><input type="text"	name="idPlayerInTeamsPlayerUpdate" value='.$elt['idPlayer'].' disabled><br>';
+			
+			$resultat .= 'PLAYER 			<br><textarea readonly name="PlayerInTeamsPlayerUpdate" style="width: 143px; height: 16px;" disabled>'.$elt['Player'].'</textarea><br>';
+			
+			$resultat .= '<input type="hidden" value='.$elt['idPlayer'].' name="IdPlayerInTeamsPlayerUpdate">';
+			
+			$resultat .= 'POSITION 			<br><input type="text" name="positionInTeamsPlayerUpdate" value='.$elt['position'].' ><br>';
+			
+			$resultat .= 'NUMBER   			<br><input type="text" name="numberInTeamsPlayerUpdate" value='.$elt['number'].' ><br>';
+			
+			$resultat .= 'YEAR TEAM   		<br><input type="text" name="YearTeamInTeamsPlayerUpdate" value='.$elt['yearTeam'].'><br>';
+			
+			$resultat .= '<input type="hidden" name="idTeamPlayerUpDate" value='.$elt['idTeamPlayer'].'>';
+		}
+		$resultat .= '<p><input type="submit" value="UPDATE" name="updatePlayer"></p>';
+		$resultat .= '</fieldset>';	
+		$resultat .= '</form>';
+		return $resultat;
+	}
+/****************************************************************************************************************************************************************************/
 
 // Fonction qui va afficher le contenue de la table teamsplayers qui contient des joueurs inconnues si il y'en a
 function afficher_joueurs_Inconnues($tab){

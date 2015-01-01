@@ -909,10 +909,11 @@
 			$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
 			$idTeamCoach = increment_teamscoachesID();
 			$idTeam = $_POST['nomDeLEquipe'];
+			$queryYearTeam = " SELECT YearTeam FROM teamscoaches WHERE idTeam = $idTeam";
+			$resultForYearTeam = $dbh->query($queryYearTeam)->fetch();
+			$YearTeam = $resultForYearTeam['YearTeam'];
 			$idCoach  = $_POST['newCoach'];
-			$mainCoach = $_POST['newMainCoachTeam'];
-			$YearTeam = $_POST['newYearTeamTeam'];
-			$query = "INSERT INTO teamscoaches (idTeamCoach, idTeam, idCoach, mainCoach, YearTeam) VALUES('$idTeamCoach', '$idTeam', '$idCoach', '$mainCoach', '$YearTeam')";
+			$query = "INSERT INTO teamscoaches (idTeamCoach, idTeam, idCoach, mainCoach, YearTeam) VALUES($idTeamCoach, $idTeam, $idCoach, 0, $YearTeam)";
 			$dbh->query($query);
 			$dbh=null;
 		}
@@ -927,6 +928,30 @@
 			$dbh->query($query);
 			$dbh=null;
 		}
+	}
+	
+	function show_selected_coatch(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$idTeam = $_POST['nomDeLEquipe'];
+		$idTeamCoach = $_POST['idTeamCoachCrud'];
+		$query = 'SELECT tc.idTeamCoach, t.idTeam, t.label as "Nom de l\'equipe", u.idUser as "ID USER", tc.idCoach as "ID COACH", concat(u.name," ", u.firstname) as "COACH",tc.YearTeam as "Annee de l\'equipe", tc.mainCoach as "MAIN COACH STATUS" FROM teamscoaches tc, teams t, users u WHERE t.idTeam = tc.idTeam AND u.idUser = tc.idCoach AND tc.idTeam='.$idTeam.' AND idTeamCoach='.$idTeamCoach.'';
+		$result = $dbh->query($query);
+		$tab = array();
+		$i=0;
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$tab[$i]['idTeamCoach'] = $row['idTeamCoach'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['Nom de l\'equipe'] = $row['Nom de l\'equipe'];
+			$tab[$i]['ID USER'] = $row['ID USER'];
+			$tab[$i]['ID COACH'] = $row['ID COACH'];
+			$tab[$i]['COACH'] = $row['COACH'];
+			$tab[$i]['Annee de l\'equipe'] = $row['Annee de l\'equipe'];
+			$tab[$i]['MAIN COACH STATUS'] = $row['MAIN COACH STATUS'];
+			$i++;
+		}	
+		
+		$dbh=null;
+		return $tab;
 	}
 	
 	function coachs_par_teams(){
@@ -1206,17 +1231,6 @@ function coachs_par_teams_SELECT(){
 		return $tab;
 	}
 	
-	function update_delegue(){
-		$idTeamDelegue = $_POST['idTeamDelegueUpDate'];
-		$idDelegue = $_POST['IdDelegueInTeamsDelegueUpdate'];
-		$mainDelegue = $_POST['MainDelegueInTeamsDelegueUpdate'];
-		$yearTeam = $_POST['YearTeamInTeamsDelegueUpdate'];
-		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
-		$query = "UPDATE teamsdelegues SET mainDelegue = $mainDelegue, yearTeam = $yearTeam WHERE idTeamDelegue = $idTeamDelegue and idDelegue = $idDelegue";
-		$dbh->query($query);
-		$dbh = null;
-	}
-	
 	function delegue_to_add(){
 		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
 		$idTeamDelegue = $_POST['idTeamDelegueCRUD'];
@@ -1236,6 +1250,19 @@ function coachs_par_teams_SELECT(){
 		
 		return $tab;
 	}
+	
+	function update_delegue(){
+		$idTeamDelegue = $_POST['idTeamDelegueUpDate'];
+		$idDelegue = $_POST['IdDelegueInTeamsDelegueUpdate'];
+		$mainDelegue = $_POST['MainDelegueInTeamsDelegueUpdate'];
+		$yearTeam = $_POST['YearTeamInTeamsDelegueUpdate'];
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$query = "UPDATE teamsdelegues SET mainDelegue = $mainDelegue, yearTeam = $yearTeam WHERE idTeamDelegue = $idTeamDelegue and idDelegue = $idDelegue";
+		$dbh->query($query);
+		$dbh = null;
+	}
+	
+	
 	
 	function add_new_delegue(){
 	
@@ -1517,6 +1544,110 @@ function coachs_par_teams_SELECT(){
 		$dbh = null;
 	}
 	
+	
+/****************************************************************************************************************************************************************************/
+
+/*****************************************************************************TeamsPlayers*********************************************************************************/
+	function afficher_teamsplayers(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$query = " SELECT tp.idTeamPlayer, tp.idTeam, t.label, tp.idPlayer, concat(p.name, ' ' , p.firstname) as 'Player', tp.number, tp.position, tp.yearTeam FROM `teamsplayers` tp, teams t, players p WHERE tp.idPlayer = p.idPlayer AND tp.idTeam = t.idTeam ORDER BY `tp`.`idTeam` ASC";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTeamPlayer'] = $row['idTeamPlayer'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['idPlayer'] = $row['idPlayer'];
+			$tab[$i]['Player'] = $row['Player'];
+			$tab[$i]['number'] = $row['number'];
+			$tab[$i]['position'] = $row['position'];
+			$tab[$i]['yearTeam'] = $row['yearTeam'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function players_to_add(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$idTeamPlayer = $_POST['idTeamPlayerCRUD'];
+		$queryIDTeam = "SELECT idTeam FROM teamsplayers WHERE idTeamPlayer = $idTeamPlayer";
+		$resultForIdTeam = $dbh->query($queryIDTeam)->fetch();
+		$idTeam = $resultForIdTeam['idTeam'];
+		$query = "SELECT p.idPlayer, concat(p.name, ' ' , p.firstname) as 'Player' 
+						FROM players p 
+							WHERE p.idPlayer NOT IN (SELECT idPlayer FROM teamsplayers WHERE idTeam = $idTeam)";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idPlayer'] = $row['idPlayer'];
+			$tab[$i]['Player'] = $row['Player'];
+			$i++;
+		}
+		$dbh = null;
+		
+		return $tab;
+	}
+	
+	
+	function selected_team_players(){
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		if(!empty($_POST['idTeamPlayerCRUD'])){
+			$idTeamPlayer = $_POST['idTeamPlayerCRUD'];
+		}else{
+			$idTeamPlayer = $_POST['idTeamPlayerUpDate'];
+		}
+		$query = " SELECT tp.idTeamPlayer, tp.idTeam, t.label, tp.idPlayer, concat(p.name, ' ' , p.firstname) as 'Player', tp.number, tp.position, tp.yearTeam FROM `teamsplayers` tp, teams t, players p WHERE tp.idPlayer = p.idPlayer AND tp.idTeam = t.idTeam AND tp.idTeamPlayer = $idTeamPlayer";
+		$result = $dbh->query($query);
+		$tab = array();
+		$i = 0;
+		while($row = $result->fetch(PDO::FETCH_ASSOC)){
+			$tab[$i]['idTeamPlayer'] = $row['idTeamPlayer'];
+			$tab[$i]['idTeam'] = $row['idTeam'];
+			$tab[$i]['label'] = $row['label'];
+			$tab[$i]['idPlayer'] = $row['idPlayer'];
+			$tab[$i]['Player'] = $row['Player'];
+			$tab[$i]['number'] = $row['number'];
+			$tab[$i]['position'] = $row['position'];
+			$tab[$i]['yearTeam'] = $row['yearTeam'];
+			$i++;
+		}
+		$dbh = null;
+		return $tab;
+	}
+	
+	function update_teamsplayers(){
+		$idTeamPlayer = $_POST['idTeamPlayerUpDate'];
+		$idPlayer = $_POST['IdPlayerInTeamsPlayerUpdate'];
+		$number = $_POST['numberInTeamsPlayerUpdate'];
+		$position = $_POST['positionInTeamsPlayerUpdate'];
+		$yearTeam = $_POST['YearTeamInTeamsPlayerUpdate'];
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root',''); 
+		$query = "UPDATE teamsplayers SET number = $number, position = '$position', yearTeam = $yearTeam WHERE idTeamPlayer = $idTeamPlayer AND idPlayer = $idPlayer";
+		$dbh->query($query);
+		$dbh = null;
+	}
+	
+	
+	
+	function add_new_player(){
+	
+		$dbh = new PDO('mysql:host=localhost;dbname=basketproject','root','');
+		$newIdTeamPlayer = increment_teamsplayersID(); 
+		$idPlayer = $_POST['idPlayereToADD'];
+		$idTeamPlayer = $_POST['idTeamPlayerCRUDD'];
+		$queryIDTeam = "SELECT idTeam FROM teamsplayers WHERE idTeamPlayer = $idTeamPlayer";
+		$resultForIdTeam = $dbh->query($queryIDTeam)->fetch();
+		$idTeam = $resultForIdTeam['idTeam'];
+		$yearTeam = $_POST['YearTeamInTeamsPlayerUpdate'];
+		$position = $_POST['positionInTeamsPlayerUpdate'];
+		$number = $_POST['numberInTeamsPlayerUpdate'];
+		$query = "INSERT INTO teamsplayers (idTeamPlayer, idTeam, idPlayer, number, position, yearTeam) VALUES('$newIdTeamPlayer', '$idTeam', '$idPlayer', '$number', '$position', '$yearTeam')";
+		$dbh->query($query);
+		$dbh = null;
+	}
 	
 /****************************************************************************************************************************************************************************/
 

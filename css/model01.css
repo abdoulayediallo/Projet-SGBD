@@ -1,0 +1,274 @@
+/* ==============================================
+   FEUILLE DE STYLES DES GABARITS HTML/CSS --- 01
+   © Elephorm & Alsacreations.com
+   Conditions d'utilisation:
+   http://creativecommons.org/licenses/by/2.0/fr/
+   ============================================== */
+
+
+/* --- COULEURS --- */
+
+/* Note: vous pouvez modifier simplement l'aspect de ce gabarit en modifiant
+   uniquement les couleurs de fond (propriétés background) et les couleurs
+   du texte (propriété color).
+   Pour modifier la disposition des blocs, voir plus bas dans la feuille de
+   styles la partie «positionnement». */
+
+/* Général */
+body {
+	color: #F0E39E;
+	background: #181A12; /* Voir -> Note 1 ci-dessous */
+}
+a {
+	color: #FF6533;
+}
+a:hover, a:focus {
+	color: #FF4C00;
+}
+strong {
+	color: #A1B55D;
+}
+
+/* En-tête */
+#entete {
+	background: #181A12;
+}
+
+
+
+/* Navigation */
+
+
+
+#navigation {
+	background: #181A12;
+}
+#navigation a {
+	color: #FF6533;
+}
+#navigation a:hover, #navigation a:focus {
+	background: #000000;
+}
+
+/* Contenu principal */
+#contenu {
+	color: #363B29;
+	background: #cbd888;
+}
+#contenu a {
+	color: #332510;
+}
+#contenu a:hover, #contenu a:focus {
+	color: #6E5122;
+}
+#contenu strong {
+	color: #181A12;
+}
+
+/* Pied de page */
+#pied {
+	color: #E6A948;
+}
+
+/* Formulaire */
+#formulaire {
+    
+	padding: 12px 12px;
+	background: #cbdd88;
+}
+
+/* Notification */
+#notification {
+	color: #582758;
+}
+
+
+/* --- POSITIONNEMENT --- */
+
+/* Page */
+body {
+	padding: 0; /* -> 2 */
+}
+
+/* En-tête */
+#entete {
+	padding: 15px 20px 10px 20px;
+}
+
+#entete h1 {
+	margin: 0;
+}
+#entete h1 img {
+	float: left;
+	margin: 7px 20px 10px 0;
+}
+#entete .sous-titre {
+	margin: 4px 0 15px 0;
+}
+
+/* Menu de navigation */
+#navigation {
+	padding: 12px 15px;
+}
+#navigation ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#navigation li {
+	display: inline; /* -> 3 */
+}
+#navigation a {
+	padding: 6px;
+	line-height: 1.5;
+	font-size: .9em;
+	text-decoration: none;
+}
+
+/* Contenu */
+#contenu {
+	padding: 10px 20px;
+}
+#contenu > :first-child {
+	margin-top: 10px;
+}
+#contenu p, #contenu li {
+	line-height: 1.5;
+}
+
+/* Pied de page */
+#pied {
+	padding: 15px 20px;
+	font-size: .85em;
+}
+#pied p {
+	margin: .5em 0;
+}
+#pied #copyright {
+	float: right;
+	margin: .5em 0 30px 10%;
+	font-size: 1em;
+}
+
+/* Tableau repris du cours d'HTML */
+.html {
+	font-family: "Bitstream Vera Mono", "Lucida Console", "Courier New",
+		monospace;
+	font-size: larger;
+	color: purple;
+}
+
+#tableBalises th{
+	border-style: solid;
+	border-width: thin;
+	border-collapse: collapse;
+	background-color: #DCDCDC;
+}
+#tableBalises td{
+	border-style: solid;
+	border-width: thin;
+	border-collapse: collapse;
+}
+
+.actif {
+	-moz-box-shadow:inset 0px 1px 0px 0px #9acc85;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #9acc85;
+	box-shadow:inset 0px 1px 0px 0px #9acc85;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #74ad5a), color-stop(1, #68a54b));
+	background:-moz-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-webkit-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-o-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-ms-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:linear-gradient(to bottom, #74ad5a 5%, #68a54b 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#74ad5a', endColorstr='#68a54b',GradientType=0);
+	background-color:#74ad5a;
+	border:1px solid #3b6e22;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 12px;
+	text-decoration:none;
+}
+.actif:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #68a54b), color-stop(1, #74ad5a));
+	background:-moz-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-webkit-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-o-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-ms-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:linear-gradient(to bottom, #68a54b 5%, #74ad5a 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#68a54b', endColorstr='#74ad5a',GradientType=0);
+	background-color:#68a54b;
+}
+.actif:active {
+	position:relative;
+	top:1px;
+}
+
+
+.inactif {
+	-moz-box-shadow:inset 0px 1px 0px 0px #c21b21;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #c21b21;
+	box-shadow:inset 0px 1px 0px 0px #c21b21;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d40c0c), color-stop(1, #bd2a2a));
+	background:-moz-linear-gradient(top, #d40c0c 5%, #bd2a2a 100%);
+	background:-webkit-linear-gradient(top, #d40c0c 5%, #bd2a2a 100%);
+	background:-o-linear-gradient(top, #d40c0c 5%, #bd2a2a 100%);
+	background:-ms-linear-gradient(top, #d40c0c 5%, #bd2a2a 100%);
+	background:linear-gradient(to bottom, #d40c0c 5%, #bd2a2a 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d40c0c', endColorstr='#bd2a2a',GradientType=0);
+	background-color:#d40c0c;
+	border:1px solid #ff0000;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 12px;
+	text-decoration:none;
+}
+.inactif:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bd2a2a), color-stop(1, #d40c0c));
+	background:-moz-linear-gradient(top, #bd2a2a 5%, #d40c0c 100%);
+	background:-webkit-linear-gradient(top, #bd2a2a 5%, #d40c0c 100%);
+	background:-o-linear-gradient(top, #bd2a2a 5%, #d40c0c 100%);
+	background:-ms-linear-gradient(top, #bd2a2a 5%, #d40c0c 100%);
+	background:linear-gradient(to bottom, #bd2a2a 5%, #d40c0c 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bd2a2a', endColorstr='#d40c0c',GradientType=0);
+	background-color:#bd2a2a;
+}
+.inactif:active {
+	position:relative;
+	top:1px;
+}
+
+
+/* --- NOTES ---
+
+1.	Notes que cette couleur de fond n'est apparente qu'en bas de page. Plus
+	haut, elle est masque: par la couleur de fond de l'en-tête, puis par la
+	couleur de fond du menu, puis par la couleur de fond du contenu. Seul le
+	pied de page laisse apparaitre cette couleur de fond.
+
+2.	Pour ce gabarit, on supprime l'écart entre les «bords» du navigateur et
+	le contenu, en passant le padding de l'élément BODY à zéro.
+	(Voir également la note numéro 2 dans base.css.)
+
+3.	Si les éléments de notre menu se placent horizontalement plutôt que les
+	uns en dessous des autres, c'est parce qu'ils ne sont plus affichés
+	comme des blocs (ce qui est normalement le cas des éléments LI), mais
+	comme des éléments de type en-ligne. On obtient ce comportement avec la
+	propriété "display" et la valeur "inline".
+	Le fait que nos LI se comportent comme un flot unique de texte aura deux
+	conséquences:
+	- on va pouvoir aligner le texte du menu à gauche (c'est le cas ici), à
+	  droite ou encore au centre, en jouant sur la propriété "text-align" du
+	  menu (sur l'élément UL ou sur div#navigation);
+	- certains styles ne pourront pas être appliqués... par exemple, la
+	  propriété "width" ne peut pas être utilisée pour les éléments en
+	  "display: inline".
+
+*/

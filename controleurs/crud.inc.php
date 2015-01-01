@@ -70,6 +70,11 @@ if(isset($_POST['choixTables'])){
 			$table_name = '::::::::::::::::::::::::::::::::: Teams GAMES :::::::::::::::::::::::::::::::::';
 		break;
 		
+		case "teamsplayers":
+			$crud = afficher_players_par_team(afficher_teamsplayers()) ;
+			$table_name = '::::::::::::::::::::::::::::::::: Teams PLAYERS :::::::::::::::::::::::::::::::::';
+		break;
+		
 		default:
 			echo "Cette table ne doit pas etre cruder :) ... du moins pas pour l'instant'";
 	}
@@ -119,14 +124,12 @@ if(isset($_POST['modifierTeamCoach'])){
 
 if(isset($_POST['addNewCoach'])){
 	add_new_coach();
-	$crud =  show_coaches_per_team(coachs_par_teams_select());
-	$crud .= afficher_coachs_par_equipes(coachs_par_teams());	
+	$crud = afficher_coachs_par_equipes(coachs_par_teams());	
 }
 
 if(isset($_POST['delCoach'])){
 	delete_coach();
-	$crud =  show_coaches_per_team(coachs_par_teams_select());
-	$crud .= afficher_coachs_par_equipes(coachs_par_teams());	
+	$crud = afficher_coachs_par_equipes(coachs_par_teams());	
 }
 
 if(isset($_POST['modifierTeamCalendar']) ){
@@ -209,6 +212,22 @@ if(isset($_POST['updateGames'])){
 if(isset($_POST['addGames'])){
 		add_new_games();
 		$crud = afficher_TeamsGames(afficher_games()) ;
+}
+
+if(isset($_POST['modifierTeamPlayer'])){
+	$crud = show_selected_team_players(selected_team_players());
+	$crud .= afficher_players_par_team(afficher_teamsplayers()) ;
+	
+}
+
+if(isset($_POST['updatePlayer'])){
+	update_teamsplayers();
+	$crud = afficher_players_par_team(afficher_teamsplayers()) ;
+}
+
+if(isset($_POST['addNewPlayer'])){
+	add_new_player();
+	$crud = afficher_players_par_team(afficher_teamsplayers()) ;
 }
 require('vues/crud.inc.php');
 ?>
